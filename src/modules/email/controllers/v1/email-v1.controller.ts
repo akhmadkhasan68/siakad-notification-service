@@ -20,7 +20,9 @@ export class EmailV1Controller {
     ): Promise<void> {
         console.log('Send email to: ', payload.email);
         console.log('Subject: ', payload.subject);
-        console.log('Context: ', context);
+        console.log('Context: ', context.getArgs());
+        console.log('Context: ', context.getHeaders());
+        console.log('Context: ', context.getSubject());
 
         await this.emailService.sendEmail(
             payload.subject,
@@ -39,7 +41,9 @@ export class EmailV1Controller {
     ): Promise<any> {
         console.log('Send bulk email to: ', payload.emails);
         console.log('Subject: ', payload.subject);
-        console.log('Context: ', context);
+        console.log('Context: ', context.getArgs());
+        console.log('Context: ', context.getHeaders());
+        console.log('Context: ', context.getSubject());
 
         await this.emailService.sendBulkEmail(
             payload.subject,
@@ -57,11 +61,12 @@ export class EmailV1Controller {
         @Ctx() context: NatsContext,
     ): Promise<void> {
         console.log('Send email OTP to: ', payload.email);
-        console.log('Subject: ', payload.subject);
-        console.log('Context: ', context);
+        console.log('Context: ', context.getArgs());
+        console.log('Context: ', context.getHeaders());
+        console.log('Context: ', context.getSubject());
 
         await this.emailService.sendEmail(
-            payload.subject,
+            'Konfirmasi Kode OTP',
             {
                 otp: payload.data.otp,
                 otpExpiryInMinutes: payload.data.otpExpiryInMinutes,
