@@ -32,7 +32,7 @@ export class EmailService {
 
     async sendBulkEmail(
         subject: string,
-        content: string,
+        content: any,
         template: string,
         emails: string[],
     ): Promise<void> {

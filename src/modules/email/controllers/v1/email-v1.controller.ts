@@ -1,8 +1,10 @@
 import { Controller } from '@nestjs/common';
 import { Ctx, EventPattern, NatsContext, Payload } from '@nestjs/microservices';
 import { ServiceCommands } from 'src/common/constants/service-command.constant';
+import { config } from 'src/config';
 import { EmailCreateBulkPayloadV1RequestDto } from '../../dto/v1/create/email-create-bulk-payload-v1.request';
 import { EmailCreatePayloadV1RequestDto } from '../../dto/v1/create/email-create-payload-v1.request';
+import { EmailSendForgotPasswordPayloadV1Request } from '../../dto/v1/forgot-password/email-send-forgot-password-payload-v1.request';
 import { EmailSendOTPPayloadV1Request } from '../../dto/v1/send-otp/email-send-otp-payload-v1.request';
 import { EmailService } from '../../services/email.service';
 
@@ -26,7 +28,9 @@ export class EmailV1Controller {
 
         await this.emailService.sendEmail(
             payload.subject,
-            payload.content,
+            {
+                message: payload.content,
+            },
             'basic',
             payload.email,
         );
@@ -47,7 +51,9 @@ export class EmailV1Controller {
 
         await this.emailService.sendBulkEmail(
             payload.subject,
-            payload.content,
+            {
+                message: payload.content,
+            },
             'basic',
             payload.emails,
         );
@@ -72,6 +78,32 @@ export class EmailV1Controller {
                 otpExpiryInMinutes: payload.data.otpExpiryInMinutes,
             },
             'otp',
+            payload.email,
+        );
+
+        return;
+    }
+
+    @EventPattern(
+        ServiceCommands.NotificationService.V1.Email.SendEmailForgotPassword,
+    )
+    async sendEmailForgotPassword(
+        @Payload() payload: EmailSendForgotPasswordPayloadV1Request,
+        @Ctx() context: NatsContext,
+    ): Promise<void> {
+        console.log('Send email forgot password to: ', payload.email);
+        console.log('Context: ', context.getArgs());
+        console.log('Context: ', context.getHeaders());
+        console.log('Context: ', context.getSubject());
+
+        await this.emailService.sendEmail(
+            'Permintaan Reset Password',
+            {
+                resetPasswordUrl: `${config.forgotPasswordUrl}?token=${payload.data.resetPasswordToken}`,
+                resetPasswordTokenExpiryInMinutes:
+                    payload.data.resetPasswordTokenExpiryInMinutes,
+            },
+            'forgot-password',
             payload.email,
         );
 

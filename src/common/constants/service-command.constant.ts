@@ -32,6 +32,8 @@ export const ServiceCommands = {
                 SendEmail: 'notification.v1.email.sendEmail',
                 SendBulkEmail: 'notification.v1.email.sendBulkEmail',
                 SendEmailOTP: 'notification.v1.email.sendEmailOTP',
+                SendEmailForgotPassword:
+                    'notification.v1.email.sendEmailForgotPassword',
             },
             InApp: {
                 FetchPaginate: 'notification.v1.inApp.fetchPaginate',

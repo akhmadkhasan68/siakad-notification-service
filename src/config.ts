@@ -2,6 +2,9 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 export const config = {
+    forgotPasswordUrl:
+        process.env.FORGOT_PASSWORD_URL ||
+        'https://mydomain.com/reset-password',
     app: {
         env: process.env.APP_ENV || 'development',
     },
